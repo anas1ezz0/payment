@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:payment/Features/checkout/presentation/views/payment_details.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:payment/Features/checkout/presentation/manger/cubit/stripe_cubit.dart';
 import 'package:payment/Features/checkout/presentation/views/widgets/cart_info_item.dart';
-import 'package:payment/Features/checkout/presentation/views/widgets/payment_methods_list_view.dart';
+import 'package:payment/Features/checkout/presentation/views/widgets/payment_methods_bottom_sheet.dart';
 import 'package:payment/Features/checkout/presentation/views/widgets/total_price_widget.dart';
+import 'package:payment/Features/data/repos/check_out_repo_impl.dart';
 import 'package:payment/core/widgets/custom_button.dart';
 
 class MyCartViewBody extends StatelessWidget {
@@ -60,44 +62,16 @@ class MyCartViewBody extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
                   builder: (context) {
-                    return const PaymentMethodsBottomSheet();
+                    return BlocProvider(
+                      create: (context) => StripeCubit(CheckOutRepoImpl()),
+                      child: const PaymentMethodsBottomSheet(),
+                    );
                   });
             },
           ),
           const SizedBox(
             height: 12,
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class PaymentMethodsBottomSheet extends StatelessWidget {
-  const PaymentMethodsBottomSheet({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(
-            height: 16,
-          ),
-          const PaymentMethodsListView(),
-          const SizedBox(
-            height: 32,
-          ),
-          CustomButton(
-              text: 'Continue',
-              onTap: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return const PaymentDetailsView();
-                }));
-              }),
         ],
       ),
     );
